@@ -1,0 +1,14 @@
+.next
+node_modules
+public
+build
+dist
+*.md
+*.json
+*.yaml
+*.yml
+.DS_Store
+.env*.local
+.vercel
+.next
+out
