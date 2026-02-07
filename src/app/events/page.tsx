@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
 import { useState, useMemo } from 'react';
 import { format, parseISO, isToday, isAfter, startOfToday } from 'date-fns';
-import { Search, Calendar as CalendarIcon, MapPin, Clock, CalendarDays } from 'lucide-react';
+import { Search, Calendar as CalendarIcon, CalendarDays } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/events/Calendar';
@@ -31,7 +31,8 @@ const mockEvents: Event[] = [
     location: 'Main Sanctuary',
     description: 'Join us for our weekly Sunday service with worship and the Word.',
     isFeatured: true,
-    imageUrl: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
+    imageUrl:
+      'https://images.unsplash.com/photo-1542273917363-3b1817f69a2b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80',
   },
   // Add more mock events as needed
 ];
@@ -46,22 +47,23 @@ export default function EventsPage() {
   // Filter events based on search query and selected view
   const filteredEvents = useMemo(() => {
     let filtered = [...mockEvents];
-    
+
     // Apply search filter
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(event => 
-        event.title.toLowerCase().includes(query) ||
-        event.description?.toLowerCase().includes(query) ||
-        event.location.toLowerCase().includes(query)
+      filtered = filtered.filter(
+        (event) =>
+          event.title.toLowerCase().includes(query) ||
+          event.description?.toLowerCase().includes(query) ||
+          event.location.toLowerCase().includes(query)
       );
     }
-    
+
     // Apply date filter based on active view
     const today = startOfToday();
-    filtered = filtered.filter(event => {
+    filtered = filtered.filter((event) => {
       const eventDate = parseISO(event.date);
-      
+
       if (activeView === 'upcoming') {
         return isToday(eventDate) || isAfter(eventDate, today);
       } else if (activeView === 'past') {
@@ -69,14 +71,14 @@ export default function EventsPage() {
       }
       return true;
     });
-    
+
     // Apply date selection filter if a date is selected
     if (selectedDate) {
-      filtered = filtered.filter(event => 
-        format(parseISO(event.date), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
+      filtered = filtered.filter(
+        (event) => format(parseISO(event.date), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
       );
     }
-    
+
     return filtered;
   }, [searchQuery, selectedDate, activeView]);
 
@@ -97,18 +99,18 @@ export default function EventsPage() {
 
   return (
     <main className="container mx-auto px-4">
-      <PageHeader 
+      <PageHeader
         title="Upcoming Events"
         description="Join us for worship, fellowship, and spiritual growth. Find events that will inspire and strengthen your faith."
         ctaText="View Calendar"
         ctaOnClick={() => setActiveView('calendar')}
         overlayOpacity={50}
         background="image"
-        imageUrl='https://images.unsplash.com/photo-1716666179428-368bf3fa0b8b?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        imageUrl="https://images.unsplash.com/photo-1716666179428-368bf3fa0b8b?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       >
         <div className="mt-6 flex flex-wrap gap-3 justify-center">
-          <Button 
-            variant={activeView === 'upcoming' ? 'secondary' : 'outline'} 
+          <Button
+            variant={activeView === 'upcoming' ? 'secondary' : 'outline'}
             className="gap-2"
             onClick={() => {
               setActiveView('upcoming');
@@ -118,8 +120,8 @@ export default function EventsPage() {
             <CalendarDays className="h-4 w-4" />
             Upcoming
           </Button>
-          <Button 
-            variant={activeView === 'past' ? 'secondary' : 'outline'} 
+          <Button
+            variant={activeView === 'past' ? 'secondary' : 'outline'}
             className="gap-2"
             onClick={() => setActiveView('past')}
           >
@@ -133,17 +135,17 @@ export default function EventsPage() {
         {/* Calendar View */}
         <div className="lg:w-1/3">
           <div className="sticky top-4">
-            <Calendar 
-              events={mockEvents} 
+            <Calendar
+              events={mockEvents}
               onDateSelect={handleDateSelect}
               onEventClick={handleEventClick}
             />
-            
+
             <div className="mt-6 p-4 bg-muted/30 rounded-lg">
               <h3 className="font-medium mb-3">Event Categories</h3>
               <div className="space-y-2">
-                <Button 
-                  variant={activeView === 'upcoming' ? 'secondary' : 'ghost'} 
+                <Button
+                  variant={activeView === 'upcoming' ? 'secondary' : 'ghost'}
                   className="w-full justify-start"
                   onClick={() => {
                     setActiveView('upcoming');
@@ -153,16 +155,16 @@ export default function EventsPage() {
                   <CalendarIcon className="h-4 w-4 mr-2" />
                   Upcoming Events
                 </Button>
-                <Button 
-                  variant={activeView === 'calendar' ? 'secondary' : 'ghost'} 
+                <Button
+                  variant={activeView === 'calendar' ? 'secondary' : 'ghost'}
                   className="w-full justify-start"
                   onClick={() => setActiveView('calendar')}
                 >
                   <CalendarIcon className="h-4 w-4 mr-2" />
                   All Events
                 </Button>
-                <Button 
-                  variant={activeView === 'past' ? 'secondary' : 'ghost'} 
+                <Button
+                  variant={activeView === 'past' ? 'secondary' : 'ghost'}
                   className="w-full justify-start"
                   onClick={() => {
                     setActiveView('past');
@@ -189,17 +191,13 @@ export default function EventsPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            
+
             {selectedDate && (
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
                   Showing events for {format(selectedDate, 'MMMM d, yyyy')}
                 </span>
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => setSelectedDate(null)}
-                >
+                <Button variant="ghost" size="sm" onClick={() => setSelectedDate(null)}>
                   Clear
                 </Button>
               </div>
@@ -208,10 +206,10 @@ export default function EventsPage() {
 
           {filteredEvents.length > 0 ? (
             <div className="space-y-6">
-              {filteredEvents.map(event => (
-                <EventCard 
-                  key={event.id} 
-                  event={event} 
+              {filteredEvents.map((event) => (
+                <EventCard
+                  key={event.id}
+                  event={event}
                   onRegister={handleRegister}
                   onDetails={handleEventClick}
                 />
@@ -222,13 +220,13 @@ export default function EventsPage() {
               <CalendarIcon className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium text-foreground mb-1">No events found</h3>
               <p className="text-muted-foreground">
-                {searchQuery 
+                {searchQuery
                   ? 'Try adjusting your search or filters'
                   : 'There are no events scheduled for the selected time period.'}
               </p>
               {searchQuery && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="mt-4"
                   onClick={() => {
                     setSearchQuery('');

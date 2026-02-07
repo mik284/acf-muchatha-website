@@ -4,6 +4,7 @@ import { X } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import { Button } from '@/components/ui/button';
 import { Event } from './EventCard';
+import Image from 'next/image';
 
 interface EventModalProps {
   isOpen: boolean;
@@ -18,17 +19,12 @@ export function EventModal({ isOpen, onClose, event, onRegister }: EventModalPro
   const eventDate = parseISO(event.date);
   const formattedDate = format(eventDate, 'EEEE, MMMM d, yyyy');
   const isEventPast = new Date() > new Date(event.date);
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
       <div className="relative w-full max-w-2xl bg-background rounded-lg shadow-2xl overflow-hidden">
         <div className="absolute top-4 right-4 z-10">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="rounded-full h-10 w-10"
-          >
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full h-10 w-10">
             <X className="h-5 w-5" />
             <span className="sr-only">Close</span>
           </Button>
@@ -36,10 +32,14 @@ export function EventModal({ isOpen, onClose, event, onRegister }: EventModalPro
 
         {event.imageUrl && (
           <div className="h-48 bg-muted overflow-hidden">
-            <img 
-              src={event.imageUrl} 
+            <Image
+              src={event.imageUrl}
               alt={event.title}
               className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.src = `https://via.placeholder.com/600x400`;
+              }}
             />
           </div>
         )}
@@ -94,7 +94,7 @@ export function EventModal({ isOpen, onClose, event, onRegister }: EventModalPro
               Close
             </Button>
             {!isEventPast && onRegister && (
-              <Button 
+              <Button
                 onClick={() => {
                   onRegister(event.id);
                   onClose();

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { format, isSameDay, isSameMonth, parseISO, isToday, isBefore, endOfDay } from 'date-fns';
+import { format, isSameDay, parseISO, isToday, isBefore, endOfDay } from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -23,19 +23,19 @@ interface CalendarProps {
 
 export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
-  
+
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
-  const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDay();
+  // const lastDayOfMonth = new Date(currentYear, currentMonth + 1, 0).getDay();
   const daysInLastMonth = new Date(currentYear, currentMonth, 0).getDate();
 
   const weeks = useMemo(() => {
     const days = [];
-    const today = new Date();
-    
+    // const today = new Date();
+
     // Previous month's days
     for (let i = 0; i < firstDayOfMonth; i++) {
       const day = daysInLastMonth - firstDayOfMonth + i + 1;
@@ -44,7 +44,7 @@ export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) 
         date,
         isCurrentMonth: false,
         isToday: isToday(date),
-        events: events.filter(event => isSameDay(parseISO(event.date), date)),
+        events: events.filter((event) => isSameDay(parseISO(event.date), date)),
       });
     }
 
@@ -55,7 +55,7 @@ export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) 
         date,
         isCurrentMonth: true,
         isToday: isToday(date),
-        events: events.filter(event => isSameDay(parseISO(event.date), date)),
+        events: events.filter((event) => isSameDay(parseISO(event.date), date)),
       });
     }
 
@@ -67,7 +67,7 @@ export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) 
         date,
         isCurrentMonth: false,
         isToday: isToday(date),
-        events: events.filter(event => isSameDay(parseISO(event.date), date)),
+        events: events.filter((event) => isSameDay(parseISO(event.date), date)),
       });
     }
 
@@ -115,24 +115,27 @@ export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) 
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-7 gap-px bg-border">
         {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day) => (
-          <div key={day} className="bg-muted/30 text-muted-foreground text-sm font-medium text-center py-2">
+          <div
+            key={day}
+            className="bg-muted/30 text-muted-foreground text-sm font-medium text-center py-2"
+          >
             {day}
           </div>
         ))}
       </div>
-      
+
       <div className="bg-muted/30">
         {weeks.map((week, weekIndex) => (
           <div key={weekIndex} className="grid grid-cols-7 gap-px">
             {week.map((day, dayIndex) => {
               const isPast = isBefore(endOfDay(day.date), new Date()) && !isToday(day.date);
               const hasEvents = day.events.length > 0;
-              
+
               return (
-                <div 
+                <div
                   key={dayIndex}
                   className={`min-h-[100px] p-1.5 bg-background text-sm ${
                     !day.isCurrentMonth ? 'opacity-50' : ''
@@ -142,22 +145,22 @@ export function Calendar({ events, onDateSelect, onEventClick }: CalendarProps) 
                   onClick={() => onDateSelect?.(day.date)}
                 >
                   <div className="flex flex-col h-full">
-                    <span className={`inline-flex items-center justify-center h-6 w-6 rounded-full text-sm ${
-                      day.isToday 
-                        ? 'bg-primary text-primary-foreground font-medium' 
-                        : ''
-                    }`}>
+                    <span
+                      className={`inline-flex items-center justify-center h-6 w-6 rounded-full text-sm ${
+                        day.isToday ? 'bg-primary text-primary-foreground font-medium' : ''
+                      }`}
+                    >
                       {format(day.date, 'd')}
                     </span>
                     <div className="mt-1 space-y-0.5 flex-1 overflow-hidden">
                       {hasEvents && (
                         <div className="space-y-0.5">
                           {day.events.slice(0, 2).map((event) => (
-                            <div 
+                            <div
                               key={event.id}
                               className={`text-xs truncate px-1 py-0.5 rounded ${
-                                event.isFeatured 
-                                  ? 'bg-primary/10 text-primary' 
+                                event.isFeatured
+                                  ? 'bg-primary/10 text-primary'
                                   : 'bg-muted/50 text-foreground'
                               }`}
                               onClick={(e) => {

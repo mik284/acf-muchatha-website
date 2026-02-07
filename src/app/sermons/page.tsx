@@ -1,12 +1,23 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Search, Calendar, User, Play, Loader2, Eye, ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { SermonModal } from "@/components/sermons/SermonModal";
-import { fetchSermons, fetchPlaylists, YouTubeVideo, YouTubePlaylist } from "@/services/youtube";
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Search,
+  Calendar,
+  User,
+  Play,
+  Loader2,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
+import { SermonModal } from '@/components/sermons/SermonModal';
+import { fetchSermons, fetchPlaylists, YouTubeVideo } from '@/services/youtube';
 import Image from 'next/image';
 import { PageHeader } from '@/components/ui/page-header';
 
@@ -42,13 +53,15 @@ export default function SermonsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeFilter, setActiveFilter] = useState<'all' | 'recent' | 'popular'>('all');
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
-  const [playlists, setPlaylists] = useState<{ id: string, title: string, count: number }[]>([]);
-  const [playlistVideos, setPlaylistVideos] = useState<Array<{
-    id: string;
-    title: string;
-    videoId: string;
-    duration: string;
-  }>>([]);
+  const [playlists, setPlaylists] = useState<{ id: string; title: string; count: number }[]>([]);
+  const [playlistVideos, setPlaylistVideos] = useState<
+    Array<{
+      id: string;
+      title: string;
+      videoId: string;
+      duration: string;
+    }>
+  >([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -62,16 +75,16 @@ export default function SermonsPage() {
 
         const [playlistsData, standaloneVideos] = await Promise.all([
           fetchPlaylists(),
-          fetchSermons()
+          fetchSermons(),
         ]);
 
         // Process playlists
         const validPlaylists = playlistsData
-          .filter(playlist => playlist.videos?.length > 0)
-          .map(playlist => ({
+          .filter((playlist) => playlist.videos?.length > 0)
+          .map((playlist) => ({
             id: playlist.id,
             title: playlist.title,
-            count: playlist.videos?.length || 0
+            count: playlist.videos?.length || 0,
           }));
 
         setPlaylists(validPlaylists);
@@ -79,15 +92,15 @@ export default function SermonsPage() {
         // Process all videos from playlists and standalone videos
         const allVideos = [
           ...standaloneVideos,
-          ...playlistsData.flatMap(playlist => playlist.videos || [])
+          ...playlistsData.flatMap((playlist) => playlist.videos || []),
         ];
 
         // Remove duplicates by videoId
-        const uniqueVideos = Array.from(new Map(
-          allVideos.map(video => [video.videoId, video])
-        ).values());
+        const uniqueVideos = Array.from(
+          new Map(allVideos.map((video) => [video.videoId, video])).values()
+        );
 
-        const sermonData: Sermon[] = uniqueVideos.map(video => ({
+        const sermonData: Sermon[] = uniqueVideos.map((video) => ({
           ...video,
           speaker: extractSpeaker(video),
           date: new Date(video.publishedAt).toLocaleDateString('en-US', {
@@ -97,7 +110,7 @@ export default function SermonsPage() {
           }),
           // Add playlist info if available
           playlistId: video.playlistId,
-          playlistTitle: playlistsData.find(p => p.id === video.playlistId)?.title
+          playlistTitle: playlistsData.find((p) => p.id === video.playlistId)?.title,
         }));
 
         setSermons(sermonData);
@@ -118,34 +131,41 @@ export default function SermonsPage() {
 
     // Apply playlist filter if selected
     if (selectedPlaylist) {
-      result = result.filter(sermon => sermon.playlistId === selectedPlaylist);
+      result = result.filter((sermon) => sermon.playlistId === selectedPlaylist);
     }
 
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       result = result.filter(
-        sermon =>
+        (sermon) =>
           sermon.title.toLowerCase().includes(query) ||
           sermon.speaker.toLowerCase().includes(query) ||
-          (sermon.description?.toLowerCase().includes(query) || false) ||
-          (sermon.playlistTitle?.toLowerCase().includes(query) || false)
+          sermon.description?.toLowerCase().includes(query) ||
+          false ||
+          sermon.playlistTitle?.toLowerCase().includes(query) ||
+          false
       );
     }
 
     // Apply active filter
     switch (activeFilter) {
       case 'recent':
-        result.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        result.sort(
+          (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        );
         break;
       case 'popular':
-        result.sort((a, b) =>
-          (b.viewCount || 0) - (a.viewCount || 0) ||
-          new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        result.sort(
+          (a, b) =>
+            (b.viewCount || 0) - (a.viewCount || 0) ||
+            new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
         );
         break;
       default: // 'all'
-        result.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
+        result.sort(
+          (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+        );
     }
 
     // Reset to first page when filters change
@@ -171,12 +191,12 @@ export default function SermonsPage() {
 
     // If this sermon is part of a playlist, get all videos from that playlist
     if (sermon.playlistId) {
-      const playlistSermons = sermons.filter(s => s.playlistId === sermon.playlistId);
-      const videos = playlistSermons.map(s => ({
+      const playlistSermons = sermons.filter((s) => s.playlistId === sermon.playlistId);
+      const videos = playlistSermons.map((s) => ({
         id: s.id,
         title: s.title,
         videoId: s.videoId,
-        duration: s.duration || '0:00'
+        duration: s.duration || '0:00',
       }));
       setPlaylistVideos(videos);
     } else {
@@ -189,7 +209,7 @@ export default function SermonsPage() {
   };
 
   const handleVideoSelect = (videoId: string) => {
-    const selected = sermons.find(s => s.videoId === videoId);
+    const selected = sermons.find((s) => s.videoId === videoId);
     if (selected) {
       setSelectedSermon(selected);
       // Scroll to top of modal when changing videos
@@ -217,7 +237,7 @@ export default function SermonsPage() {
       onClick={() => handleSermonClick(sermon)}
     >
       <div className="relative aspect-video bg-muted">
-        <img
+        <Image
           src={`https://img.youtube.com/vi/${sermon.videoId}/maxresdefault.jpg`}
           alt={sermon.title}
           className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
@@ -273,13 +293,12 @@ export default function SermonsPage() {
 
   return (
     <main className="container mx-auto px-4">
-
       <PageHeader
         title="Grow in Faith Through God's Word"
         description="Discover inspiring messages and biblical teachings to strengthen your spiritual journey. Watch or listen to our latest sermons anytime, anywhere."
         overlayOpacity={50}
         background="image"
-        imageUrl='https://images.unsplash.com/photo-1553085118-5a5c02cbcf2f?q=80&w=2284&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'
+        imageUrl="https://images.unsplash.com/photo-1553085118-5a5c02cbcf2f?q=80&w=2284&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       >
         <div className="relative z-10 max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-secondary/80 text-primary text-sm font-medium mb-4">
@@ -292,8 +311,8 @@ export default function SermonsPage() {
               size="lg"
               className="gap-2 transition-transform hover:scale-105"
               onClick={() => {
-                const latestSermon = [...sermons].sort((a, b) =>
-                  new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+                const latestSermon = [...sermons].sort(
+                  (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
                 )[0];
                 if (latestSermon) handleSermonClick(latestSermon);
               }}
@@ -413,14 +432,21 @@ export default function SermonsPage() {
                   className="w-full pl-4 pr-10 py-2 rounded-full border border-input bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
                 >
                   <option value="">All Playlists</option>
-                  {playlists.map(playlist => (
+                  {playlists.map((playlist) => (
                     <option key={playlist.id} value={playlist.id}>
                       {playlist.title} ({playlist.count})
                     </option>
                   ))}
                 </select>
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-muted-foreground">
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 15 15"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-muted-foreground"
+                  >
                     <path d="M4 6H11L7.5 10.5L4 6Z" fill="currentColor"></path>
                   </svg>
                 </div>
@@ -465,11 +491,7 @@ export default function SermonsPage() {
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-destructive">{error}</p>
-            <Button
-              variant="outline"
-              className="mt-4"
-              onClick={() => window.location.reload()}
-            >
+            <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
               Retry
             </Button>
           </div>
