@@ -38,7 +38,7 @@ interface SermonModalProps {
     date: string;
     duration: string;
     description: string;
-    thumbnail: string;
+    thumbnailUrl: string;
     videoId: string;
     viewCount?: number;
     playlistId?: string;

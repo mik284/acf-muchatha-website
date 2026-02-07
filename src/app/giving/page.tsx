@@ -19,7 +19,7 @@ const formSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Please enter a valid email'),
   paymentMethod: z.enum(['credit-card', 'bank-transfer'] as const),
-  isRecurring: z.boolean().default(false),
+  isRecurring: z.boolean().optional().default(false),
 });
 
 type FormData = {
@@ -28,7 +28,7 @@ type FormData = {
   lastName: string;
   email: string;
   paymentMethod: 'credit-card' | 'bank-transfer';
-  isRecurring: boolean;
+  isRecurring?: boolean;
 };
 
 export default function GivingPage() {
@@ -64,8 +64,7 @@ export default function GivingPage() {
       await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API call
       
       toast({
-        title: 'Donation received!',
-        description: 'Thank you for your generous gift.',
+        title: 'Donation received! Thank you for your generous gift.',
       });
       
       // Reset form
@@ -78,8 +77,7 @@ export default function GivingPage() {
     } catch (error) {
       console.error('Error submitting form:', error);
       toast({
-        title: 'Error',
-        description: 'There was an error processing your donation. Please try again.',
+        title: 'Error: There was an error processing your donation. Please try again.',
         variant: 'destructive',
       });
     } finally {

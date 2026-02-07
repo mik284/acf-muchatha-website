@@ -26,11 +26,18 @@ const prayerFormSchema = z.object({
   request: z
     .string()
     .min(10, { message: 'Please share your prayer request (at least 10 characters).' }),
-  sharePublicly: z.boolean().default(false),
-  contactMe: z.boolean().default(false),
+  sharePublicly: z.boolean().optional().default(false),
+  contactMe: z.boolean().optional().default(false),
 });
 
-type PrayerFormValues = z.infer<typeof prayerFormSchema>;
+type PrayerFormValues = {
+  name: string;
+  request: string;
+  email?: string;
+  phone?: string;
+  sharePublicly?: boolean;
+  contactMe?: boolean;
+};
 
 export default function PrayerRequestPage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
