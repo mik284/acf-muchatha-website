@@ -84,10 +84,10 @@ export const SermonModal = ({ isOpen, onClose, sermon }: SermonModalProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-black/80 backdrop-blur-sm">
       <div 
         ref={modalRef}
-        className="relative w-full max-w-6xl bg-background rounded-2xl shadow-2xl max-h-[90vh] overflow-hidden"
+        className="relative w-full max-w-[700px] h-[85vh] sm:h-[90vh] bg-background rounded-xl shadow-2xl overflow-hidden"
         onClick={(e) => e.target === e.currentTarget && onClose()}
       >
         {/* Close button */}
@@ -95,27 +95,27 @@ export const SermonModal = ({ isOpen, onClose, sermon }: SermonModalProps) => {
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
+          className="absolute top-2 sm:top-4 right-2 sm:right-4 z-10 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
         >
           <X className="h-6 w-6" />
         </Button>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
+        <div className="flex flex-col h-full overflow-hidden">
           {/* Video Player */}
-          <div className="relative aspect-video lg:aspect-auto bg-black">
+          <div className="bg-black">
             <VideoPlayer
-              videoId={sermon.videoId}
-              title={sermon.title}
-              className="w-full h-full"
+              videoId={sermon?.videoId}
+              title={sermon?.title}
+              className="w-full"
             />
           </div>
 
           {/* Sermon Details */}
-          <div className="flex flex-col h-full">
-            <div className="p-6 lg:p-8 overflow-y-auto">
-              <h2 className="text-2xl font-bold mb-4">{sermon.title}</h2>
+          <div className="flex-1 overflow-y-auto">
+            <div className="p-3 sm:p-6 lg:p-8 overflow-y-auto">
+              <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3 sm:mb-4">{sermon.title}</h2>
               
-              <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">
                 <span>{sermon.preacher}</span>
                 <span>•</span>
                 <span>{new Date(sermon.date).toLocaleDateString()}</span>
@@ -123,12 +123,12 @@ export const SermonModal = ({ isOpen, onClose, sermon }: SermonModalProps) => {
                 <span>{sermon.duration}</span>
               </div>
 
-              <p className="text-muted-foreground mb-6 leading-relaxed">
+              <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 leading-relaxed">
                 {sermon.description}
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-3 mb-6">
+              <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:mb-6">
                 <Button variant="outline" size="sm">
                   <Download className="h-4 w-4 mr-2" />
                   Download

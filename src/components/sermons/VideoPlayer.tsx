@@ -39,13 +39,13 @@ export function VideoPlayer({ videoId, title, className = '' }: VideoPlayerProps
           <p className="text-muted-foreground">Failed to load video</p>
         </div>
       ) : (
-        <div className="relative w-full overflow-hidden rounded-lg bg-black" style={{ paddingTop: '56.25%' }}>
+        <div className="relative w-full overflow-hidden rounded-t-lg bg-black" style={{ paddingTop: '55%' }}>
           <iframe
             src={embedUrl}
             title={title || 'Sermon video'}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
-            className="absolute top-0 left-0 w-full h-full"
+            className="absolute top-0 left-0 w-full h-full max-w-[1000px] mx-auto"
             onLoad={handleLoad}
             onError={handleError}
             loading="lazy"

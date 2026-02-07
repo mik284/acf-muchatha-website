@@ -187,6 +187,7 @@ export default function SermonsPage() {
   };
 
   const handleSermonClick = (sermon: Sermon) => {
+    console.log("sermon clicked", sermon);
     setSelectedSermon(sermon);
 
     // If this sermon is part of a playlist, get all videos from that playlist
@@ -238,6 +239,8 @@ export default function SermonsPage() {
     >
       <div className="relative aspect-video bg-muted">
         <Image
+          width={500}
+          height={500}
           src={`https://img.youtube.com/vi/${sermon.videoId}/maxresdefault.jpg`}
           alt={sermon.title}
           className="w-full h-full object-cover group-hover:opacity-90 transition-opacity"
@@ -596,16 +599,7 @@ export default function SermonsPage() {
         <SermonModal
           isOpen={isModalOpen}
           onClose={handleCloseModal}
-          videoId={selectedSermon?.videoId || ''}
-          title={selectedSermon?.title || ''}
-          speaker={selectedSermon?.speaker || ''}
-          date={selectedSermon?.date || ''}
-          viewCount={selectedSermon?.viewCount}
-          description={selectedSermon?.description || ''}
-          playlistId={selectedSermon?.playlistId}
-          playlistTitle={selectedSermon?.playlistTitle}
-          playlistVideos={playlistVideos}
-          onVideoSelect={handleVideoSelect}
+          sermon={selectedSermon}
         />
       )}
     </main>
