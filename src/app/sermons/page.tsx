@@ -183,18 +183,18 @@ export default function SermonsPage() {
     setSelectedSermon(sermon);
 
     // If this sermon is part of a playlist, get all videos from that playlist
-    if (sermon.playlistId) {
-      const playlistSermons = sermons.filter((s) => s.playlistId === sermon.playlistId);
-      const videos = playlistSermons.map((s) => ({
-        id: s.id,
-        title: s.title,
-        videoId: s.videoId,
-        duration: s.duration || '0:00',
-      }));
+    // if (sermon.playlistId) {
+    //   const playlistSermons = sermons.filter((s) => s.playlistId === sermon.playlistId);
+    //   const videos = playlistSermons.map((s) => ({
+    //     id: s.id,
+    //     title: s.title,
+    //     videoId: s.videoId,
+    //     duration: s.duration || '0:00',
+    //   }));
       // setPlaylistVideos(videos);
-    } else {
+    // } else {
       // setPlaylistVideos([]);
-    }
+    // }
 
     setIsModalOpen(true);
     // Disable body scroll when modal is open
