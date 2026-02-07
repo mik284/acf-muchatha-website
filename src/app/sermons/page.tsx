@@ -54,14 +54,6 @@ export default function SermonsPage() {
   const [activeFilter, setActiveFilter] = useState<'all' | 'recent' | 'popular'>('all');
   const [selectedPlaylist, setSelectedPlaylist] = useState<string | null>(null);
   const [playlists, setPlaylists] = useState<{ id: string; title: string; count: number }[]>([]);
-  const [playlistVideos, setPlaylistVideos] = useState<
-    Array<{
-      id: string;
-      title: string;
-      videoId: string;
-      duration: string;
-    }>
-  >([]);
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
@@ -199,9 +191,9 @@ export default function SermonsPage() {
         videoId: s.videoId,
         duration: s.duration || '0:00',
       }));
-      setPlaylistVideos(videos);
+      // setPlaylistVideos(videos);
     } else {
-      setPlaylistVideos([]);
+      // setPlaylistVideos([]);
     }
 
     setIsModalOpen(true);
@@ -209,24 +201,10 @@ export default function SermonsPage() {
     document.body.style.overflow = 'hidden';
   };
 
-  const handleVideoSelect = (videoId: string) => {
-    const selected = sermons.find((s) => s.videoId === videoId);
-    if (selected) {
-      setSelectedSermon(selected);
-      // Scroll to top of modal when changing videos
-      setTimeout(() => {
-        const modal = document.querySelector('[role="dialog"]');
-        if (modal) {
-          modal.scrollTop = 0;
-        }
-      }, 100);
-    }
-  };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedSermon(null);
-    setPlaylistVideos([]);
+    // setPlaylistVideos([]);
     // Re-enable body scroll when modal is closed
     document.body.style.overflow = 'auto';
   };
